@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCoach Damien - Programme Personnalisé</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1f2937;
+            padding-bottom: 80px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 i {
+            font-size: 28px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: #2563eb;
+        }
+
+        /* ===== COUNTDOWN ===== */
+        .countdown {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .countdown-title {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .countdown-time {
+            font-size: 42px;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .countdown-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* ===== SCHEDULE ===== */
+        .schedule-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .schedule-item {
+            background: #f9fafb;
+            border-left: 4px solid #2563eb;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .schedule-item.completed {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .schedule-day {
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+
+        .schedule-type {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .btn-block {
+            width: 100%;
+            display: block;
+        }
+
+        /* ===== EXERCISE CARDS ===== */
+        .exercise-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .exercise-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .exercise-sets {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .exercise-details {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .exercise-detail {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .exercise-detail i {
+            color: #2563eb;
+            margin-top: 2px;
+        }
+
+        /* ===== ALERT BOX ===== */
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .alert i {
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        /* ===== PROGRESS BARS ===== */
+        .progress-bar {
+            background: #e5e7eb;
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #2563eb 0%, #10b981 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        /* ===== BADGE GRID ===== */
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .badge-item {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .badge-item.unlocked {
+            opacity: 1;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .badge-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* ===== FORMS ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 4px;
+        }
+
+        .nav-item i {
+            font-size: 24px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .nav-item span {
+            display: block;
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+        }
+
+        .nav-item.active i,
+        .nav-item.active span {
+            color: #2563eb;
+        }
+
+        /* ===== WATER TRACKER ===== */
+        .water-tracker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .water-glass {
+            width: 40px;
+            height: 50px;
+            border: 3px solid #3b82f6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .water-glass::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+            transition: height 0.3s ease;
+        }
+
+        .water-glass.filled::after {
+            height: 100%;
+        }
+
+        /* ===== TIPS ===== */
+        .tip-card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .tip-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .tip-text {
+            color: #78350f;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ===== CHART CONTAINER ===== */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .badge-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .bottom-nav {
+                max-width: 1200px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 16px 16px 0 0;
+            }
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .gap-10 {
+            gap: 10px;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <h1><i class="fas fa-dumbbell"></i> FitCoach Damien</h1>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        
+        <!-- ===== SECTION: ACCUEIL ===== -->
+        <section id="section-home" class="section active">
+            <!-- Countdown -->
+            <div class="countdown">
+                <div class="countdown-title">🏃‍♂️ Course 10 km</div>
+                <div class="countdown-time" id="countdown-days">--</div>
+                <div class="countdown-label">jours restants</div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">⚖️</div>
+                    <div class="stat-value" id="current-weight">114</div>
+                    <div class="stat-label">kg actuel</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💪</div>
+                    <div class="stat-value" id="total-sessions">0</div>
+                    <div class="stat-label">séances</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📉</div>
+                    <div class="stat-value" id="weight-lost">0</div>
+                    <div class="stat-label">kg perdus</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" id="badges-unlocked">0</div>
+                    <div class="stat-label">badges</div>
+                </div>
+            </div>
+
+            <!-- Daily Tip -->
+            <div class="tip-card">
+                <div class="tip-title">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Conseil du Coach</span>
+                </div>
+                <div class="tip-text" id="daily-tip">
+                    L'échauffement n'est pas optionnel ! 5 minutes peuvent prévenir des semaines de blessure.
+                </div>
+            </div>
+
+            <!-- Programme de la semaine -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-calendar-week"></i>
+                        Programme de la Semaine
+                    </h2>
+                </div>
+                <div class="schedule-grid" id="weekly-schedule">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION: PROGRAMME ===== -->
+        <section id="section-program" class="section">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-dumbbell"></i>
+                    Programme d'Entraînement
+                </h2>
+                
+                <!-- Alerte Genoux -->
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>⚠️ Attention Genoux</strong>
+                        <p style="margin-top: 5px; font-size: 14px;">Ancienne rupture LCA genou droit. Amplitudes contrôlées, arrêt immédiat si douleur.</p>
+                    </div>
+                </div>
+
+                <!-- Exercices du jour -->
+                <div id="program-content">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION: PROGRESSION ===== -->
+        <section id="section-progress" class="section">
+            <!-- Évolution du Poids -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Évolution du Poids
+                    </h2>
+                    <button class="btn btn-primary" onclick="openAddWeightModal()">
+                        <i class="fas fa-plus"></i> Ajouter
+                    </button>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between mb-20">
+                        <div>
+                            <div style="font-size: 14px; color: #6b7280;">Poids actuel</div>
+                            <div style="font-size: 28px; font-weight: 700;" id="progress-current-weight">114 kg</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 14px; color: #6b7280;">Objectif</div>
+                            <div style="font-size: 28px; font-weight: 700;">94 kg</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="weight-progress-bar" style="width: 0%"></div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 10px; color: #6b7280; font-size: 14px;">
+                        <span id="weight-progress-text">0% accompli</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="weightChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Badges -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-trophy"></i>
+                    Badges Débloqués
+                </h2>
+                <div class="badge-grid" id="badges-container">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- Mensurations -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-ruler"></i>
+                        Mensurations
+                    </h2>
+                    <button class="btn btn-primary" onclick="openAddMeasurementModal()">
+                        <i class="fas fa-plus"></i> Ajouter
+                    </button>
+                </div>
+                <div id="measurements-list">
+                    <p style="text-align: center; color: #6b7280; padding: 20px;">
+                        Aucune mensuration enregistrée. Ajoutez-en une pour suivre votre évolution !
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION: JOURNAL ===== -->
+        <section id="section-journal" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-book"></i>
+                        Journal d'Entraînement
+                    </h2>
+                    <button class="btn btn-primary" onclick="openAddJournalModal()">
+                        <i class="fas fa-plus"></i> Ajouter
+                    </button>
+                </div>
+                <div id="journal-entries">
+                    <p style="text-align: center; color: #6b7280; padding: 20px;">
+                        Aucune entrée. Enregistrez votre première séance !
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION: NUTRITION ===== -->
+        <section id="section-nutrition" class="section">
+            <!-- Objectifs Nutrition -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-utensils"></i>
+                    Nutrition & Hydratation
+                </h2>
+                
+                <div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                        <div>
+                            <div style="font-size: 14px; color: #6b7280;">Calories</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #2563eb;">2400</div>
+                            <div style="font-size: 12px; color: #6b7280;">kcal/jour</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 14px; color: #6b7280;">Protéines</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #10b981;">140-160</div>
+                            <div style="font-size: 12px; color: #6b7280;">g/jour</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suivi Protéines -->
+                <div style="margin-bottom: 20px;">
+                    <div class="flex justify-between items-center" style="margin-bottom: 10px;">
+                        <label class="form-label" style="margin: 0;">Protéines consommées aujourd'hui (g)</label>
+                        <span id="protein-count" style="font-weight: 700; color: #10b981;">0 g</span>
+                    </div>
+                    <div class="flex gap-10">
+                        <input type="number" id="protein-input" class="form-input" placeholder="Quantité en grammes" style="flex: 1;">
+                        <button class="btn btn-success" onclick="addProtein()">
+                            <i class="fas fa-plus"></i> Ajouter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Suivi Hydratation -->
+                <div>
+                    <div class="flex justify-between items-center" style="margin-bottom: 10px;">
+                        <label class="form-label" style="margin: 0;">Hydratation (verres de 250ml)</label>
+                        <span id="water-count" style="font-weight: 700; color: #3b82f6;">0 / 16</span>
+                    </div>
+                    <div class="water-tracker" id="water-tracker">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conseils Nutrition -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Conseils Nutrition
+                </h2>
+                <div style="line-height: 1.8; color: #4b5563;">
+                    <p style="margin-bottom: 15px;"><strong>🍗 Protéines :</strong> Privilégier poulet, poisson, œufs, fromage blanc.</p>
+                    <p style="margin-bottom: 15px;"><strong>🥗 Légumes :</strong> À volonté à chaque repas pour la satiété.</p>
+                    <p style="margin-bottom: 15px;"><strong>🍚 Glucides :</strong> Riz, pâtes, patates douces autour des entraînements.</p>
+                    <p style="margin-bottom: 15px;"><strong>💧 Hydratation :</strong> 3-4 litres d'eau par jour minimum.</p>
+                    <p><strong>⏰ Timing :</strong> Repas 1-2h avant l'entraînement, protéines dans les 2h après.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION: PROFIL ===== -->
+        <section id="section-profile" class="section">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-user"></i>
+                    Mon Profil
+                </h2>
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 60px; margin-bottom: 10px;">👨</div>
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 5px;">Damien</h3>
+                    <p style="color: #6b7280;">33 ans • 190 cm</p>
+                </div>
+
+                <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <div style="display: grid; gap: 15px;">
+                        <div class="flex justify-between">
+                            <span style="color: #6b7280;">Poids de départ</span>
+                            <span style="font-weight: 700;">114 kg</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span style="color: #6b7280;">Poids actuel</span>
+                            <span style="font-weight: 700;" id="profile-current-weight">114 kg</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span style="color: #6b7280;">Objectif</span>
+                            <span style="font-weight: 700; color: #10b981;">94 kg</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span style="color: #6b7280;">Date de début</span>
+                            <span style="font-weight: 700;">7 janvier 2026</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span style="color: #6b7280;">Course 10 km</span>
+                            <span style="font-weight: 700;">5 avril 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; gap: 10px;">
+                    <button class="btn btn-primary btn-block" onclick="exportData()">
+                        <i class="fas fa-download"></i> Exporter mes Données
+                    </button>
+                    <button class="btn btn-secondary btn-block" onclick="importData()">
+                        <i class="fas fa-upload"></i> Importer des Données
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bibliothèque Conseils -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-book-open"></i>
+                    Bibliothèque Conseils
+                </h2>
+                <div style="display: grid; gap: 10px;">
+                    <button class="btn btn-secondary btn-block" onclick="alert('📖 Échauffement:\n\n1. Mobilité articulaire (2 min)\n2. Cardio léger (2 min)\n3. Mouvements spécifiques (1 min)\n\nNe jamais sauter cette étape !')">
+                        🔥 Échauffement
+                    </button>
+                    <button class="btn btn-secondary btn-block" onclick="alert('💧 Hydratation:\n\n• 3-4 litres d\'eau par jour\n• Boire régulièrement toute la journée\n• Augmenter les jours d\'entraînement\n• Ajouter électrolytes si besoin')">
+                        💧 Hydratation
+                    </button>
+                    <button class="btn btn-secondary btn-block" onclick="alert('🍽️ Nutrition Pré/Post Workout:\n\nPRÉ (1-2h avant):\n• Glucides + Protéines légères\n• Ex: Banane + amandes\n\nPOST (dans les 2h):\n• Protéines + Glucides\n• Ex: Poulet + riz')">
+                        🍽️ Nutrition
+                    </button>
+                    <button class="btn btn-secondary btn-block" onclick="alert('😴 Sommeil & Récupération:\n\n• 7-9h de sommeil par nuit\n• Routine régulière\n• Chambre fraîche et sombre\n• Pas d\'écrans 1h avant le coucher\n\nLe sommeil = gains musculaires !')">
+                        😴 Récupération
+                    </button>
+                    <button class="btn btn-secondary btn-block" onclick="alert('🦵 Courbatures:\n\n• Normales après l\'effort\n• Étirements légers\n• Marche active\n• Bain chaud\n• Massage si possible\n\nSi douleur aiguë → STOP !')">
+                        🦵 Courbatures
+                    </button>
+                    <button class="btn btn-secondary btn-block" onclick="alert('🛡️ Prévention Blessures:\n\n• Échauffement TOUJOURS\n• Progression graduelle\n• Technique avant la charge\n• Écouter son corps\n• Repos obligatoire\n• Protection genoux !')">
+                        🛡️ Blessures
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchSection('home')">
+            <i class="fas fa-home"></i>
+            <span>Accueil</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('program')">
+            <i class="fas fa-dumbbell"></i>
+            <span>Programme</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('progress')">
+            <i class="fas fa-chart-line"></i>
+            <span>Progression</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('journal')">
+            <i class="fas fa-book"></i>
+            <span>Journal</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('nutrition')">
+            <i class="fas fa-utensils"></i>
+            <span>Nutrition</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('profile')">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </div>
+    </nav>
+
+    <!-- MODAL: Ajouter Poids -->
+    <div id="modal-add-weight" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter un Poids</h3>
+                <button class="modal-close" onclick="closeModal('modal-add-weight')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="addWeight(event)">
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" id="weight-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Poids (kg)</label>
+                    <input type="number" step="0.1" id="weight-value" class="form-input" placeholder="Ex: 113.5" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">
+                    <i class="fas fa-check"></i> Enregistrer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Ajouter Mensuration -->
+    <div id="modal-add-measurement" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter des Mensurations</h3>
+                <button class="modal-close" onclick="closeModal('modal-add-measurement')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="addMeasurement(event)">
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" id="measurement-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tour de Taille (cm)</label>
+                    <input type="number" step="0.1" id="measurement-waist" class="form-input" placeholder="Ex: 95.5">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tour de Poitrine (cm)</label>
+                    <input type="number" step="0.1" id="measurement-chest" class="form-input" placeholder="Ex: 108">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tour de Cuisse (cm)</label>
+                    <input type="number" step="0.1" id="measurement-thigh" class="form-input" placeholder="Ex: 62">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tour de Bras (cm)</label>
+                    <input type="number" step="0.1" id="measurement-arm" class="form-input" placeholder="Ex: 38">
+                </div>
+                <button type="submit" class="btn btn-success btn-block">
+                    <i class="fas fa-check"></i> Enregistrer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Ajouter Entrée Journal -->
+    <div id="modal-add-journal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nouvelle Entrée Journal</h3>
+                <button class="modal-close" onclick="closeModal('modal-add-journal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="addJournal(event)">
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" id="journal-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Type de Séance</label>
+                    <select id="journal-type" class="form-select" required>
+                        <option value="">Sélectionner...</option>
+                        <option value="tuesday">Mardi - Haut du Corps</option>
+                        <option value="wednesday">Mercredi - Bas du Corps</option>
+                        <option value="friday">Vendredi - Course</option>
+                        <option value="saturday">Samedi - Full Body</option>
+                        <option value="sunday">Dimanche - Course</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Niveau d'Énergie (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" id="journal-energy" class="form-input" oninput="document.getElementById('energy-value').textContent = this.value">
+                    <div style="text-align: center; margin-top: 5px; font-weight: 700; color: #2563eb;">
+                        <span id="energy-value">5</span>/10
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes / Ressenti</label>
+                    <textarea id="journal-notes" class="form-textarea" placeholder="Comment s'est passée la séance ? Sensations, difficultés..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">
+                    <i class="fas fa-check"></i> Enregistrer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ===== DATA STRUCTURE =====
+        let AppData = {
+            profile: {
+                name: "Damien",
+                age: 33,
+                height: 190,
+                startWeight: 114,
+                currentWeight: 114,
+                targetWeight: 94,
+                startDate: "2026-01-07",
+                raceDate: "2026-04-05"
+            },
+            weights: [],
+            measurements: [],
+            sessions: [],
+            journal: [],
+            badges: [
+                { id: "first-session", name: "Première Séance", icon: "🎯", unlocked: false, date: null },
+                { id: "week-complete", name: "1 Semaine Complète", icon: "📅", unlocked: false, date: null },
+                { id: "month-complete", name: "1 Mois Sans Interruption", icon: "🔥", unlocked: false, date: null },
+                { id: "weight-5kg", name: "5 kg Perdus", icon: "⚖️", unlocked: false, date: null },
+                { id: "weight-10kg", name: "10 kg Perdus", icon: "💪", unlocked: false, date: null },
+                { id: "weight-15kg", name: "15 kg Perdus", icon: "🚀", unlocked: false, date: null },
+                { id: "weight-goal", name: "Objectif Atteint", icon: "🏆", unlocked: false, date: null },
+                { id: "race-complete", name: "Course 10 km Réussie", icon: "🏃", unlocked: false, date: null },
+                { id: "sessions-25", name: "25 Séances", icon: "💯", unlocked: false, date: null },
+                { id: "sessions-50", name: "50 Séances", icon: "🌟", unlocked: false, date: null }
+            ],
+            nutrition: {
+                proteinToday: 0,
+                waterToday: 0,
+                lastResetDate: null
+            }
+        };
+
+        // ===== PROGRAM DATA =====
+        const ProgramData = {
+            tuesday: {
+                name: "Mardi - Haut du Corps + Cardio",
+                exercises: [
+                    {
+                        name: "Développé Couché Machine",
+                        sets: "3×12",
+                        details: [
+                            "Position: Dos plaqué, pieds au sol",
+                            "Sécurité: Amplitude contrôlée, pas de rebond",
+                            "Muscles: Pectoraux, triceps, épaules avant",
+                            "Repos: 60-90 secondes entre séries"
+                        ]
+                    },
+                    {
+                        name: "Tirage Horizontal Machine",
+                        sets: "3×12",
+                        details: [
+                            "Position: Poitrine contre le support",
+                            "Sécurité: Serrer les omoplates, pas de à-coups",
+                            "Muscles: Grand dorsal, trapèzes, biceps",
+                            "Repos: 60-90 secondes"
+                        ]
+                    },
+                    {
+                        name: "Développé Épaules Haltères",
+                        sets: "3×10",
+                        details: [
+                            "Position: Assis, dos droit",
+                            "Sécurité: Amplitude contrôlée, pas au-dessus de la tête si douleur",
+                            "Muscles: Deltoïdes, triceps",
+                            "Repos: 60-90 secondes"
+                        ]
+                    },
+                    {
+                        name: "Curl Biceps Haltères",
+                        sets: "3×12",
+                        details: [
+                            "Position: Debout, coudes fixes",
+                            "Sécurité: Pas de balancement du dos",
+                            "Muscles: Biceps",
+                            "Repos: 60 secondes"
+                        ]
+                    },
+                    {
+                        name: "Extension Triceps Poulie",
+                        sets: "3×12",
+                        details: [
+                            "Position: Coudes serrés contre le corps",
+                            "Sécurité: Mouvement contrôlé",
+                            "Muscles: Triceps",
+                            "Repos: 60 secondes"
+                        ]
+                    },
+                    {
+                        name: "Cardio Tapis",
+                        sets: "30 min",
+                        details: [
+                            "Zone: Modérée, conversation possible",
+                            "Sécurité: Progression graduelle",
+                            "Bénéfice: Endurance cardiovasculaire"
+                        ]
+                    }
+                ]
+            },
+            wednesday: {
+                name: "Mercredi - Bas du Corps + Core + Cardio",
+                exercises: [
+                    {
+                        name: "Presse à Cuisses",
+                        sets: "3×15",
+                        details: [
+                            "⚠️ PROTECTION GENOUX OBLIGATOIRE",
+                            "Position: Pieds écartés largeur épaules",
+                            "Sécurité: NE PAS verrouiller les genoux, amplitude contrôlée",
+                            "Muscles: Quadriceps, fessiers",
+                            "Repos: 90 secondes"
+                        ]
+                    },
+                    {
+                        name: "Leg Curl",
+                        sets: "3×12",
+                        details: [
+                            "Position: Allongé, genoux alignés avec l'axe de rotation",
+                            "Sécurité: Mouvement fluide, pas de saccades",
+                            "Muscles: Ischio-jambiers",
+                            "Repos: 60-90 secondes"
+                        ]
+                    },
+                    {
+                        name: "Mollets Machine Debout",
+                        sets: "3×15",
+                        details: [
+                            "Position: Debout, épaules sous les coussinets",
+                            "Sécurité: Amplitude complète, pause en haut",
+                            "Muscles: Mollets (gastrocnémiens)",
+                            "Repos: 60 secondes"
+                        ]
+                    },
+                    {
+                        name: "Pont Fessiers",
+                        sets: "3×15",
+                        details: [
+                            "Position: Allongé, pieds au sol, genoux pliés",
+                            "Sécurité: Contracter les fessiers en haut",
+                            "Muscles: Fessiers, ischio-jambiers",
+                            "Repos: 60 secondes"
+                        ]
+                    },
+                    {
+                        name: "Planche",
+                        sets: "3×30-45s",
+                        details: [
+                            "Position: Coudes sous les épaules, corps aligné",
+                            "Sécurité: Gainage complet, respiration continue",
+                            "Muscles: Core (transverse, obliques)",
+                            "Repos: 60 secondes"
+                        ]
+                    },
+                    {
+                        name: "Russian Twists",
+                        sets: "3×20",
+                        details: [
+                            "Position: Assis, pieds légèrement décollés",
+                            "Sécurité: Rotation contrôlée du torse",
+                            "Muscles: Obliques",
+                            "Repos: 60 secondes"
+                        ]
+                    },
+                    {
+                        name: "Cardio Tapis",
+                        sets: "30 min",
+                        details: [
+                            "Zone: Modérée",
+                            "Sécurité: Écouter son corps",
+                            "Bénéfice: Endurance"
+                        ]
+                    }
+                ]
+            },
+            friday: {
+                name: "Vendredi - Course Extérieure",
+                exercises: [
+                    {
+                        name: "Course Extérieure",
+                        sets: "Programme Personnel",
+                        details: [
+                            "Objectif: Préparation course 10 km",
+                            "Sécurité: Échauffement 5 min, étirements après",
+                            "Progression: Augmenter graduellement distance et intensité",
+                            "Hydratation: Boire avant, pendant et après"
+                        ]
+                    }
+                ]
+            },
+            saturday: {
+                name: "Samedi - Full Body Léger (Optionnel)",
+                exercises: [
+                    {
+                        name: "Récupération Active",
+                        sets: "45-60 min",
+                        details: [
+                            "Type: Poids du corps et machines légères",
+                            "Intensité: 50-60% de l'effort habituel",
+                            "Objectif: Récupération, mobilité",
+                            "Exemples: Vélo, marche rapide, yoga"
+                        ]
+                    }
+                ]
+            },
+            sunday: {
+                name: "Dimanche - Course Extérieure",
+                exercises: [
+                    {
+                        name: "Course Extérieure",
+                        sets: "Programme Personnel",
+                        details: [
+                            "Objectif: Endurance longue",
+                            "Sécurité: Écouter son corps, hydratation",
+                            "Progression: Distance ou durée selon le plan",
+                            "Récupération: Étirements et repos après"
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const CoachTips = [
+            "L'échauffement n'est pas optionnel ! 5 minutes peuvent prévenir des semaines de blessure.",
+            "💧 Hydratation : 3-4 litres d'eau par jour. Ton corps est composé de 60% d'eau !",
+            "🍗 Protéines : Vise 140-160g par jour pour maintenir ta masse musculaire pendant la perte de poids.",
+            "😴 Le sommeil est ton meilleur allié ! 7-9h par nuit pour une récupération optimale.",
+            "📉 Une perte de 0.4 kg par semaine est idéale. Pas de précipitation, on vise le long terme !",
+            "🦵 Courbatures = normal ! C'est ton corps qui s'adapte. Si douleur aiguë → STOP.",
+            "🏃 Pour le 10 km : la constance vaut mieux que l'intensité. Cours régulièrement !",
+            "⚠️ Genou droit : amplitudes contrôlées, arrêt immédiat si douleur. Ta santé avant tout !",
+            "💪 Progression graduelle : augmente les charges de 5-10% seulement si c'est confortable.",
+            "🎯 Chaque séance compte ! Même 30 minutes valent mieux que rien."
+        ];
+
+        // ===== LOCAL STORAGE =====
+        function saveData() {
+            localStorage.setItem('fitCoachData', JSON.stringify(AppData));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('fitCoachData');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                AppData = { ...AppData, ...parsed };
+            }
+            
+            // Initialize first weight if empty
+            if (AppData.weights.length === 0) {
+                AppData.weights.push({
+                    date: AppData.profile.startDate,
+                    weight: AppData.profile.startWeight
+                });
+                saveData();
+            }
+
+            // Reset daily nutrition if needed
+            const today = new Date().toISOString().split('T')[0];
+            if (AppData.nutrition.lastResetDate !== today) {
+                AppData.nutrition.proteinToday = 0;
+                AppData.nutrition.waterToday = 0;
+                AppData.nutrition.lastResetDate = today;
+                saveData();
+            }
+        }
+
+        // ===== NAVIGATION =====
+        function switchSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById('section-' + sectionName).classList.add('active');
+
+            // Add active to clicked nav item
+            event.currentTarget.classList.add('active');
+
+            // Update content based on section
+            if (sectionName === 'home') {
+                updateDashboard();
+            } else if (sectionName === 'program') {
+                updateProgram();
+            } else if (sectionName === 'progress') {
+                updateProgress();
+            } else if (sectionName === 'journal') {
+                updateJournal();
+            } else if (sectionName === 'nutrition') {
+                updateNutrition();
+            }
+        }
+
+        // ===== DASHBOARD =====
+        function updateDashboard() {
+            // Countdown
+            const raceDate = new Date(AppData.profile.raceDate);
+            const today = new Date();
+            const diffTime = raceDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown-days').textContent = diffDays > 0 ? diffDays : 0;
+
+            // Stats
+            const currentWeight = AppData.weights.length > 0 
+                ? AppData.weights[AppData.weights.length - 1].weight 
+                : AppData.profile.startWeight;
+            
+            const weightLost = (AppData.profile.startWeight - currentWeight).toFixed(1);
+            const unlockedBadges = AppData.badges.filter(b => b.unlocked).length;
+
+            document.getElementById('current-weight').textContent = currentWeight.toFixed(1);
+            document.getElementById('total-sessions').textContent = AppData.sessions.length;
+            document.getElementById('weight-lost').textContent = weightLost;
+            document.getElementById('badges-unlocked').textContent = unlockedBadges;
+
+            // Daily Tip
+            const tipIndex = new Date().getDate() % CoachTips.length;
+            document.getElementById('daily-tip').textContent = CoachTips[tipIndex];
+
+            // Weekly Schedule
+            const schedule = [
+                { day: "Lundi", type: "Repos", completed: false },
+                { day: "Mardi", type: "Haut du Corps + Cardio", completed: isSessionCompleted('tuesday') },
+                { day: "Mercredi", type: "Bas du Corps + Core + Cardio", completed: isSessionCompleted('wednesday') },
+                { day: "Jeudi", type: "Repos", completed: false },
+                { day: "Vendredi", type: "Course Extérieure", completed: isSessionCompleted('friday') },
+                { day: "Samedi", type: "Full Body Léger (Optionnel)", completed: isSessionCompleted('saturday') },
+                { day: "Dimanche", type: "Course Extérieure", completed: isSessionCompleted('sunday') }
+            ];
+
+            const scheduleHTML = schedule.map(item => `
+                <div class="schedule-item ${item.completed ? 'completed' : ''}">
+                    <div class="schedule-day">${item.day}</div>
+                    <div class="schedule-type">${item.type}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('weekly-schedule').innerHTML = scheduleHTML;
+        }
+
+        function isSessionCompleted(type) {
+            const today = new Date().toISOString().split('T')[0];
+            const startOfWeek = new Date();
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); // Monday
+            const startOfWeekStr = startOfWeek.toISOString().split('T')[0];
+
+            return AppData.sessions.some(session => 
+                session.type === type && 
+                session.date >= startOfWeekStr && 
+                session.date <= today
+            );
+        }
+
+        // ===== PROGRAM =====
+        function updateProgram() {
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const today = new Date().getDay();
+            const todayKey = days[today];
+
+            let programData = null;
+            let programHTML = '';
+
+            // Check which program to show
+            if (todayKey === 'tuesday' || todayKey === 'wednesday' || todayKey === 'friday' || todayKey === 'saturday' || todayKey === 'sunday') {
+                programData = ProgramData[todayKey];
+            } else {
+                programHTML = `
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div style="font-size: 60px; margin-bottom: 20px;">😊</div>
+                        <h3 style="font-size: 20px; margin-bottom: 10px;">Jour de Repos</h3>
+                        <p style="color: #6b7280;">Profite de cette journée pour récupérer ! La récupération est essentielle à ta progression.</p>
+                    </div>
+                `;
+                document.getElementById('program-content').innerHTML = programHTML;
+                return;
+            }
+
+            // Generate exercises
+            const exercisesHTML = programData.exercises.map(exercise => `
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-name">${exercise.name}</div>
+                        <div class="exercise-sets">${exercise.sets}</div>
+                    </div>
+                    <div class="exercise-details">
+                        ${exercise.details.map(detail => `
+                            <div class="exercise-detail">
+                                <i class="fas fa-check-circle"></i>
+                                <span>${detail}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            programHTML = `
+                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 15px; color: #2563eb;">
+                    📅 ${programData.name}
+                </h3>
+                ${exercisesHTML}
+                <button class="btn btn-success btn-block" onclick="markSessionComplete('${todayKey}', '${programData.name}')">
+                    <i class="fas fa-check"></i> Marquer comme Complétée
+                </button>
+            `;
+
+            document.getElementById('program-content').innerHTML = programHTML;
+        }
+
+        function markSessionComplete(type, name) {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Check if already completed today
+            const alreadyCompleted = AppData.sessions.some(s => s.date === today && s.type === type);
+            if (alreadyCompleted) {
+                alert('✅ Séance déjà enregistrée aujourd\'hui !');
+                return;
+            }
+
+            AppData.sessions.push({
+                date: today,
+                type: type,
+                name: name
+            });
+
+            checkBadges();
+            saveData();
+            updateDashboard();
+            updateProgram();
+
+            alert('🎉 Séance enregistrée avec succès ! Bravo !');
+        }
+
+        // ===== PROGRESS =====
+        function updateProgress() {
+            const currentWeight = AppData.weights.length > 0 
+                ? AppData.weights[AppData.weights.length - 1].weight 
+                : AppData.profile.startWeight;
+
+            const weightLost = AppData.profile.startWeight - currentWeight;
+            const totalToLose = AppData.profile.startWeight - AppData.profile.targetWeight;
+            const progress = Math.min((weightLost / totalToLose) * 100, 100);
+
+            document.getElementById('progress-current-weight').textContent = currentWeight.toFixed(1) + ' kg';
+            document.getElementById('weight-progress-bar').style.width = progress + '%';
+            document.getElementById('weight-progress-text').textContent = progress.toFixed(0) + '% accompli';
+
+            // Update chart
+            updateWeightChart();
+
+            // Update badges
+            updateBadges();
+
+            // Update measurements
+            updateMeasurementsList();
+        }
+
+        let weightChart = null;
+
+        function updateWeightChart() {
+            const ctx = document.getElementById('weightChart');
+            if (!ctx) return;
+
+            const weights = AppData.weights.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const labels = weights.map(w => {
+                const date = new Date(w.date);
+                return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+            });
+            const data = weights.map(w => w.weight);
+
+            if (weightChart) {
+                weightChart.destroy();
+            }
+
+            weightChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Poids (kg)',
+                        data: data,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#2563eb'
+                    }, {
+                        label: 'Objectif',
+                        data: Array(data.length).fill(AppData.profile.targetWeight),
+                        borderColor: '#10b981',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: AppData.profile.targetWeight - 5,
+                            max: AppData.profile.startWeight + 5
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateBadges() {
+            const badgesHTML = AppData.badges.map(badge => `
+                <div class="badge-item ${badge.unlocked ? 'unlocked' : ''}">
+                    <div class="badge-icon">${badge.icon}</div>
+                    <div class="badge-name">${badge.name}</div>
+                    ${badge.unlocked && badge.date ? `<div style="font-size: 11px; color: #6b7280; margin-top: 5px;">${new Date(badge.date).toLocaleDateString('fr-FR')}</div>` : ''}
+                </div>
+            `).join('');
+
+            document.getElementById('badges-container').innerHTML = badgesHTML;
+        }
+
+        function checkBadges() {
+            const today = new Date().toISOString().split('T')[0];
+            const currentWeight = AppData.weights.length > 0 
+                ? AppData.weights[AppData.weights.length - 1].weight 
+                : AppData.profile.startWeight;
+            const weightLost = AppData.profile.startWeight - currentWeight;
+
+            // First session
+            if (AppData.sessions.length === 1 && !AppData.badges.find(b => b.id === 'first-session').unlocked) {
+                unlockBadge('first-session', today);
+            }
+
+            // Weight milestones
+            if (weightLost >= 5 && !AppData.badges.find(b => b.id === 'weight-5kg').unlocked) {
+                unlockBadge('weight-5kg', today);
+            }
+            if (weightLost >= 10 && !AppData.badges.find(b => b.id === 'weight-10kg').unlocked) {
+                unlockBadge('weight-10kg', today);
+            }
+            if (weightLost >= 15 && !AppData.badges.find(b => b.id === 'weight-15kg').unlocked) {
+                unlockBadge('weight-15kg', today);
+            }
+            if (currentWeight <= AppData.profile.targetWeight && !AppData.badges.find(b => b.id === 'weight-goal').unlocked) {
+                unlockBadge('weight-goal', today);
+            }
+
+            // Session milestones
+            if (AppData.sessions.length >= 25 && !AppData.badges.find(b => b.id === 'sessions-25').unlocked) {
+                unlockBadge('sessions-25', today);
+            }
+            if (AppData.sessions.length >= 50 && !AppData.badges.find(b => b.id === 'sessions-50').unlocked) {
+                unlockBadge('sessions-50', today);
+            }
+
+            // Check race date
+            if (today >= AppData.profile.raceDate && !AppData.badges.find(b => b.id === 'race-complete').unlocked) {
+                unlockBadge('race-complete', today);
+            }
+        }
+
+        function unlockBadge(badgeId, date) {
+            const badge = AppData.badges.find(b => b.id === badgeId);
+            if (badge && !badge.unlocked) {
+                badge.unlocked = true;
+                badge.date = date;
+                saveData();
+            }
+        }
+
+        function updateMeasurementsList() {
+            const measurements = AppData.measurements.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            if (measurements.length === 0) {
+                document.getElementById('measurements-list').innerHTML = `
+                    <p style="text-align: center; color: #6b7280; padding: 20px;">
+                        Aucune mensuration enregistrée. Ajoutez-en une pour suivre votre évolution !
+                    </p>
+                `;
+                return;
+            }
+
+            const measurementsHTML = measurements.map(m => `
+                <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                    <div style="font-weight: 700; margin-bottom: 10px;">
+                        📅 ${new Date(m.date).toLocaleDateString('fr-FR')}
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 14px;">
+                        ${m.waist ? `<div>Taille: <strong>${m.waist} cm</strong></div>` : ''}
+                        ${m.chest ? `<div>Poitrine: <strong>${m.chest} cm</strong></div>` : ''}
+                        ${m.thigh ? `<div>Cuisse: <strong>${m.thigh} cm</strong></div>` : ''}
+                        ${m.arm ? `<div>Bras: <strong>${m.arm} cm</strong></div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('measurements-list').innerHTML = measurementsHTML;
+        }
+
+        // ===== JOURNAL =====
+        function updateJournal() {
+            const entries = AppData.journal.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (entries.length === 0) {
+                document.getElementById('journal-entries').innerHTML = `
+                    <p style="text-align: center; color: #6b7280; padding: 20px;">
+                        Aucune entrée. Enregistrez votre première séance !
+                    </p>
+                `;
+                return;
+            }
+
+            const entriesHTML = entries.map(entry => `
+                <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                        <div>
+                            <div style="font-weight: 700; font-size: 16px;">${entry.type}</div>
+                            <div style="font-size: 14px; color: #6b7280;">
+                                📅 ${new Date(entry.date).toLocaleDateString('fr-FR')}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 12px; color: #6b7280;">Énergie</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #2563eb;">${entry.energy}/10</div>
+                        </div>
+                    </div>
+                    ${entry.notes ? `
+                        <div style="background: white; padding: 12px; border-radius: 8px; font-size: 14px; color: #4b5563; line-height: 1.6;">
+                            ${entry.notes}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            document.getElementById('journal-entries').innerHTML = entriesHTML;
+        }
+
+        // ===== NUTRITION =====
+        function updateNutrition() {
+            document.getElementById('protein-count').textContent = AppData.nutrition.proteinToday + ' g';
+            document.getElementById('water-count').textContent = AppData.nutrition.waterToday + ' / 16';
+
+            // Update water glasses
+            const waterHTML = Array.from({ length: 16 }, (_, i) => 
+                `<div class="water-glass ${i < AppData.nutrition.waterToday ? 'filled' : ''}" onclick="toggleWaterGlass(${i})"></div>`
+            ).join('');
+            document.getElementById('water-tracker').innerHTML = waterHTML;
+        }
+
+        function addProtein() {
+            const input = document.getElementById('protein-input');
+            const amount = parseFloat(input.value);
+
+            if (!amount || amount <= 0) {
+                alert('Veuillez entrer une quantité valide.');
+                return;
+            }
+
+            AppData.nutrition.proteinToday += amount;
+            saveData();
+            updateNutrition();
+            input.value = '';
+
+            if (AppData.nutrition.proteinToday >= 140) {
+                alert('🎉 Objectif protéines atteint aujourd\'hui !');
+            }
+        }
+
+        function toggleWaterGlass(index) {
+            if (index === AppData.nutrition.waterToday) {
+                AppData.nutrition.waterToday++;
+            } else if (index === AppData.nutrition.waterToday - 1) {
+                AppData.nutrition.waterToday--;
+            } else {
+                AppData.nutrition.waterToday = index + 1;
+            }
+
+            saveData();
+            updateNutrition();
+
+            if (AppData.nutrition.waterToday >= 16) {
+                alert('💧 Excellent ! Objectif hydratation atteint aujourd\'hui !');
+            }
+        }
+
+        // ===== MODALS =====
+        function openAddWeightModal() {
+            document.getElementById('weight-date').valueAsDate = new Date();
+            document.getElementById('modal-add-weight').classList.add('active');
+        }
+
+        function openAddMeasurementModal() {
+            document.getElementById('measurement-date').valueAsDate = new Date();
+            document.getElementById('modal-add-measurement').classList.add('active');
+        }
+
+        function openAddJournalModal() {
+            document.getElementById('journal-date').valueAsDate = new Date();
+            document.getElementById('modal-add-journal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function addWeight(event) {
+            event.preventDefault();
+
+            const date = document.getElementById('weight-date').value;
+            const weight = parseFloat(document.getElementById('weight-value').value);
+
+            if (!date || !weight) {
+                alert('Veuillez remplir tous les champs.');
+                return;
+            }
+
+            AppData.weights.push({ date, weight });
+            AppData.weights.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            checkBadges();
+            saveData();
+            closeModal('modal-add-weight');
+            updateProgress();
+            updateDashboard();
+
+            alert('✅ Poids enregistré avec succès !');
+        }
+
+        function addMeasurement(event) {
+            event.preventDefault();
+
+            const date = document.getElementById('measurement-date').value;
+            const waist = parseFloat(document.getElementById('measurement-waist').value) || null;
+            const chest = parseFloat(document.getElementById('measurement-chest').value) || null;
+            const thigh = parseFloat(document.getElementById('measurement-thigh').value) || null;
+            const arm = parseFloat(document.getElementById('measurement-arm').value) || null;
+
+            if (!date) {
+                alert('Veuillez sélectionner une date.');
+                return;
+            }
+
+            AppData.measurements.push({ date, waist, chest, thigh, arm });
+            saveData();
+            closeModal('modal-add-measurement');
+            updateProgress();
+
+            alert('✅ Mensurations enregistrées avec succès !');
+        }
+
+        function addJournal(event) {
+            event.preventDefault();
+
+            const date = document.getElementById('journal-date').value;
+            const type = document.getElementById('journal-type').value;
+            const typeText = document.getElementById('journal-type').options[document.getElementById('journal-type').selectedIndex].text;
+            const energy = parseInt(document.getElementById('journal-energy').value);
+            const notes = document.getElementById('journal-notes').value;
+
+            if (!date || !type) {
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+
+            AppData.journal.push({ date, type: typeText, energy, notes });
+            
+            // Also add as session if not already added today
+            const today = new Date().toISOString().split('T')[0];
+            const alreadyLogged = AppData.sessions.some(s => s.date === date && s.type === type);
+            if (!alreadyLogged && date === today) {
+                AppData.sessions.push({ date, type, name: typeText });
+            }
+
+            checkBadges();
+            saveData();
+            closeModal('modal-add-journal');
+            updateJournal();
+            updateDashboard();
+
+            alert('✅ Entrée journal enregistrée avec succès !');
+        }
+
+        // ===== DATA IMPORT/EXPORT =====
+        function exportData() {
+            const dataStr = JSON.stringify(AppData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'fitcoach-damien-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const imported = JSON.parse(event.target.result);
+                        if (confirm('⚠️ Importer ces données remplacera toutes vos données actuelles. Continuer ?')) {
+                            AppData = imported;
+                            saveData();
+                            location.reload();
+                        }
+                    } catch (error) {
+                        alert('❌ Erreur lors de l\'import. Fichier invalide.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updateDashboard();
+            updateProgress();
+            updateNutrition();
+
+            // Close modals on background click
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
